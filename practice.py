@@ -22,3 +22,8 @@ print(f"Calling the function to count vowels,consnants and digits")
 vowels,consonants,digits = count_vowels_consanants_digits(input_string)
 print(f"In the entered string '{input_string}': Vowels:{vowels} Consonants: {consonants} Digits: {digits}")
 
+
+
+
+
+
