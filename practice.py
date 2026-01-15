@@ -1,29 +1,15 @@
-import random
+##Print all Armstrong numbers between 1 and 10000
 
-def count_vowels_consanants_digits(input_string):
-    vowels = "aeiouAEIOU"
-    vowel_count = 0
-    consonant_count = 0
-    digit_count = 0
+def is_armstrong(num):
+    digits = str(num)
+    num_digits = len(digits)
+    armstrong_num = sum(int(digit) ** num_digits for digit in digits)
+    return armstrong_num == num
 
-    for char in input_string:
-        if char in vowels:
-            vowel_count += 1
-        elif char.isalpha():
-            consonant_count += 1
-        elif char.isdigit():
-            digit_count += 1
-    return vowel_count,consonant_count,digit_count
-    
+print("Armstrong numbers between 1 and 10000 are:")
+print("Caling the function is_armstrong")
 
-input_string = input("Enter a string:")
-
-print(f"Calling the function to count vowels,consnants and digits")
-vowels,consonants,digits = count_vowels_consanants_digits(input_string)
-print(f"In the entered string '{input_string}': Vowels:{vowels} Consonants: {consonants} Digits: {digits}")
-
-
-
-
-
+for number in range(1,10001):
+    if is_armstrong(number):
+        print(f"{number} is an Armstrong number")
 
