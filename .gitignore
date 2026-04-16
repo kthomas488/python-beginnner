@@ -1,0 +1,15 @@
+# Virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Sensitive config — never commit these
+CLAUDE/bot_config.json
+medicine_tracker_app/email_config.json
+
+# Logs
+CLAUDE/logs/

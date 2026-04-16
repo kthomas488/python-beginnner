@@ -1,0 +1,6 @@
+{
+    "alert_time": "08:00",
+    "alert_type": "email",
+    "email_config_path": "../medicine_tracker_app/email_config.json",
+    "data_path": "../medicine_tracker_app/medicine_data.json"
+}

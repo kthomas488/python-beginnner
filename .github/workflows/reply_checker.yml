@@ -1,0 +1,61 @@
+name: Medicine Reply Checker
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # every 30 minutes, all day
+  workflow_dispatch:           # manual trigger from GitHub
+
+permissions:
+  contents: write   # needed to commit updated medicine data back to repo
+
+jobs:
+  check-replies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install anthropic openpyxl
+
+      - name: Create config files from secrets
+        env:
+          GMAIL_EMAIL: ${{ secrets.GMAIL_EMAIL }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          python - <<'EOF'
+          import json, os
+          email_config = {
+              "enabled": True,
+              "smtp_server": "smtp.gmail.com",
+              "smtp_port": 465,
+              "sender_email": os.environ["GMAIL_EMAIL"],
+              "app_password": os.environ["GMAIL_APP_PASSWORD"],
+              "receiver_email": os.environ["GMAIL_EMAIL"]
+          }
+          with open("medicine_tracker_app/email_config.json", "w") as f:
+              json.dump(email_config, f, indent=4)
+
+          bot_config = {"anthropic_api_key": os.environ["ANTHROPIC_API_KEY"]}
+          with open("CLAUDE/bot_config.json", "w") as f:
+              json.dump(bot_config, f, indent=4)
+          EOF
+
+      - name: Check Gmail for replies
+        run: python CLAUDE/reply_checker.py
+
+      - name: Commit updated dose data
+        run: |
+          git config user.name "Medicine Tracker Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add medicine_tracker_app/medicine_data.json
+          git add -f CLAUDE/dose_tracker.xlsx
+          git diff --staged --quiet || git commit -m "chore: update dose history [skip ci]"
+          git push
