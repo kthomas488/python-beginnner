@@ -1,0 +1,70 @@
+{
+    "medicines": [
+        {
+            "id": 1,
+            "name": "Paracetamol",
+            "dosage": "1 tablet",
+            "times": [
+                "11:22",
+                "20:00"
+            ],
+            "stock": 12,
+            "refill_threshold": 5,
+            "notes": "Take after food if possible."
+        },
+        {
+            "id": 2,
+            "name": "Vitamin D",
+            "dosage": "1 capsule",
+            "times": [
+                "09:00"
+            ],
+            "stock": 4,
+            "refill_threshold": 5,
+            "notes": "Weekly supplement reminder example."
+        },
+        {
+            "id": 3,
+            "name": "Amoxicillin",
+            "dosage": "1 capsule",
+            "times": [
+                "07:00",
+                "15:00",
+                "23:00"
+            ],
+            "stock": 9,
+            "refill_threshold": 3,
+            "notes": "Finish the full course."
+        }
+    ],
+    "dose_history": [
+        {
+            "medicine_id": 1,
+            "medicine_name": "Paracetamol",
+            "date": "2026-04-05",
+            "time": "11:20",
+            "taken_at": "2026-04-05 08:03:11"
+        },
+        {
+            "medicine_id": 2,
+            "medicine_name": "Vitamin D",
+            "date": "2026-04-05",
+            "time": "09:00",
+            "taken_at": "2026-04-05 09:01:42"
+        },
+        {
+            "medicine_id": 3,
+            "medicine_name": "Amoxicillin",
+            "date": "2026-04-04",
+            "time": "07:00",
+            "taken_at": "2026-04-04 07:05:20"
+        },
+        {
+            "medicine_id": 3,
+            "medicine_name": "Amoxicillin",
+            "date": "2026-04-04",
+            "time": "15:00",
+            "taken_at": "2026-04-04 15:02:09"
+        }
+    ]
+}
