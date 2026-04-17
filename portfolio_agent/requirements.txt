@@ -1,0 +1,20 @@
+anthropic>=0.25.0
+requests>=2.31.0
+python-dotenv>=1.0.0
+schedule>=1.2.0
+playwright>=1.44.0
+beautifulsoup4>=4.12.0
+
+# Upstox
+upstox-python-sdk>=2.0.0
+
+# Market data & analysis
+yfinance>=0.2.40
+ta>=0.11.0
+
+# Charts & PDF
+matplotlib>=3.8.0
+fpdf2>=2.7.0
+
+# Auth
+pyotp>=2.9.0

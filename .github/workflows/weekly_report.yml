@@ -1,0 +1,76 @@
+name: Weekly Portfolio Report
+
+on:
+  schedule:
+    # Every Friday at 6:00 PM IST = 12:30 UTC
+    - cron: '30 12 * * 5'
+  workflow_dispatch:  # manual trigger for testing
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install \
+            anthropic \
+            upstox-python-sdk \
+            requests \
+            python-dotenv \
+            yfinance \
+            ta \
+            matplotlib \
+            fpdf2 \
+            pyotp \
+            playwright
+
+      - name: Install Playwright browser
+        run: playwright install chromium --with-deps
+
+      - name: Create config files from secrets
+        env:
+          UPSTOX_CLIENT_ID:      ${{ secrets.UPSTOX_CLIENT_ID }}
+          UPSTOX_CLIENT_SECRET:  ${{ secrets.UPSTOX_CLIENT_SECRET }}
+          UPSTOX_REDIRECT_URI:   ${{ secrets.UPSTOX_REDIRECT_URI }}
+          UPSTOX_ACCESS_TOKEN:   ${{ secrets.UPSTOX_ACCESS_TOKEN }}
+          ANTHROPIC_API_KEY:     ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_EMAIL:           ${{ secrets.GMAIL_EMAIL }}
+          GMAIL_APP_PASSWORD:    ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: |
+          python - <<'EOF'
+          import os
+          env_content = f"""UPSTOX_CLIENT_ID={os.environ['UPSTOX_CLIENT_ID']}
+          UPSTOX_CLIENT_SECRET={os.environ['UPSTOX_CLIENT_SECRET']}
+          UPSTOX_REDIRECT_URI={os.environ['UPSTOX_REDIRECT_URI']}
+          UPSTOX_ACCESS_TOKEN={os.environ['UPSTOX_ACCESS_TOKEN']}
+          ANTHROPIC_API_KEY={os.environ['ANTHROPIC_API_KEY']}
+          ALERT_FROM_EMAIL={os.environ['GMAIL_EMAIL']}
+          ALERT_FROM_PASSWORD={os.environ['GMAIL_APP_PASSWORD']}
+          ALERT_TO_EMAIL={os.environ['GMAIL_EMAIL']}
+          CHECK_INTERVAL_HOURS=8
+          """
+          with open("portfolio_agent/.env", "w") as f:
+              f.write(env_content)
+          print("Config written.")
+          EOF
+
+      - name: Generate and email weekly report
+        run: |
+          cd portfolio_agent
+          python reports/weekly_report.py
+
+      - name: Upload PDF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-report-${{ github.run_id }}
+          path: portfolio_agent/reports/output/*.pdf
+          retention-days: 30
